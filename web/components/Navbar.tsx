@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Navbar: React.FC<{ trueProp: boolean }> = ({ trueProp }) => (
+const Navbar: React.FC = () => (
   <nav>
     <ul
       style={{

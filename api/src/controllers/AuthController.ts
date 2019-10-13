@@ -1,5 +1,6 @@
 import { Response } from "express";
 import * as jwt from "jsonwebtoken";
+import passport from "passport-jwt";
 import { getRepository, Repository } from "typeorm";
 import { validate } from "class-validator";
 import {
@@ -15,6 +16,7 @@ import {
 import { User } from "../entity/User";
 import config from "../config/config";
 
+// TODO: move shared auth logic into service
 @JsonController("/auth")
 class AuthController {
   private userRepository: Repository<User>;

@@ -1,8 +1,8 @@
-import Navbar from "./Nav";
+import Navbar from "./Navbar";
 
 const MainLayout: React.FC = ({ children }) => (
   <div>
-    <Navbar trueProp={true} />
+    <Navbar />
     {children}
   </div>
 );

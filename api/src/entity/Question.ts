@@ -11,11 +11,16 @@ import {
 import { User } from "./User";
 import { Vote } from "./Vote";
 import { Answer } from "./Answer";
+import { MaxLength } from "class-validator";
 
 @Entity()
 export class Question {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  @MaxLength(70)
+  title: string;
 
   @Column()
   body: string;

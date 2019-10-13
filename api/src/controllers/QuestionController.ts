@@ -24,7 +24,7 @@ class QuestionController {
   async find() {
     // TODO: use query builder to optimize the data being returned
     return this.questionRepository.find({
-      select: ["id", "body", "createdAt", "updatedAt"],
+      select: ["id", "body", "title", "createdAt", "updatedAt"],
       relations: ["votes", "user"]
     });
   }
@@ -41,10 +41,10 @@ class QuestionController {
   @Post("/")
   async add(
     @CurrentUser({ required: true }) currentUser: User,
-    @Body() { body }: Question
+    @Body() questionBody: Question
   ) {
     const question = this.questionRepository.create({
-      body,
+      ...questionBody,
       user: currentUser
     });
     await this.questionRepository.save(question);
