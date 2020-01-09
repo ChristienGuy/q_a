@@ -22,11 +22,11 @@ class QuestionController {
 
   @Get("/")
   async find() {
-    // TODO: use query builder to optimize the data being returned
-    return this.questionRepository.find({
-      select: ["id", "body", "title", "createdAt", "updatedAt"],
-      relations: ["votes", "user"]
-    });
+    return this.questionRepository
+      .createQueryBuilder("question")
+      .select(["question", "user.email", "user.username"])
+      .innerJoin("question.user", "user")
+      .getMany();
   }
 
   @Get("/:id([0-9]+)")
@@ -36,6 +36,11 @@ class QuestionController {
       select: ["id", "body"],
       relations: ["votes", "user", "answers"]
     });
+    // return this.questionRepository
+    //   .createQueryBuilder("question")
+    //   .select(["question", "user.email", "user.username"])
+    //   .leftJoin("question.user", "user")
+    //   .getMany();
   }
 
   @Post("/")

@@ -38,7 +38,10 @@ class AuthController {
     let user: User;
 
     try {
-      user = await this.userRepository.findOneOrFail({ where: { email } });
+      user = await this.userRepository.findOneOrFail({
+        where: { email },
+        select: ["id", "email", "password"]
+      });
     } catch (error) {
       // unauthorized so throw 401
       throw new UnauthorizedError("no matching user");

@@ -2,12 +2,24 @@
 
 ## API
 
-Start up the postgres container:
+Required Dependencies:
+
+Docker
+Docker Compose
+Node 10+
+
+### Initial Setup
+
+Install local dependencies:
 
 ```bash
-cd api
+npm i
+```
 
-docker-compose up
+Start up postgres & the node server:
+
+```bash
+npm start
 ```
 
 exec into postgres container:
@@ -22,16 +34,16 @@ Create db called `qa`:
 CREATE DATABASE qa;
 ```
 
-Then to start up the TS server:
-
-```bash
-npm start
-```
-
-Run initial migrations:
+In a new terminal instance run initial migrations:
 
 ```bash
 npm run migration:run
 ```
 
 This will give you a database with an admin user but otherwise completely empty.
+
+After this point you can just run:
+
+```bash
+npm start
+```

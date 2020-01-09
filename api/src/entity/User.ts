@@ -28,7 +28,7 @@ export class User {
   @Length(4, 20)
   username: string;
 
-  @Column()
+  @Column({ select: false })
   @Length(4, 100)
   password: string;
 
@@ -36,13 +36,22 @@ export class User {
   @IsNotEmpty()
   role: string;
 
-  @OneToMany(() => Question, question => question.user)
+  @OneToMany(
+    () => Question,
+    question => question.user
+  )
   questions: Question[];
 
-  @OneToMany(() => Answer, answer => answer.user)
+  @OneToMany(
+    () => Answer,
+    answer => answer.user
+  )
   answers: Answer[];
 
-  @OneToMany(() => Vote, vote => vote.user)
+  @OneToMany(
+    () => Vote,
+    vote => vote.user
+  )
   votes: Vote[];
 
   @Column()

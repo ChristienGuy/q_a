@@ -28,8 +28,6 @@ function getNewTokenForUser({ id, email }) {
 var whitelist = ["http://localhost:3000"];
 var corsOptions = {
   origin: function(origin, callback) {
-    console.log("ORIGIN", origin);
-
     if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
