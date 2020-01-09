@@ -32,15 +32,20 @@ class QuestionController {
   @Get("/:id([0-9]+)")
   async findOne(@Param("id") id: number) {
     // TODO: use query builder to optimize the data being returned
-    return this.questionRepository.findOneOrFail(id, {
-      select: ["id", "body"],
-      relations: ["votes", "user", "answers"]
-    });
-    // return this.questionRepository
-    //   .createQueryBuilder("question")
-    //   .select(["question", "user.email", "user.username"])
-    //   .leftJoin("question.user", "user")
-    //   .getMany();
+    return this.questionRepository
+      .createQueryBuilder("question")
+      .select([
+        "question",
+        "answerUser.email",
+        "answerUser.username",
+        "questionUser.email",
+        "questionUser.username",
+        "answers"
+      ])
+      .leftJoin("question.user", "questionUser")
+      .leftJoin("question.answers", "answers")
+      .innerJoin("answers.user", "answerUser")
+      .getOne();
   }
 
   @Post("/")
