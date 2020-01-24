@@ -62,6 +62,7 @@ export const app = createExpressServer({
     if (user && roles.includes(user.role)) {
       authorized = true;
     }
+    console.log(action.request);
 
     // if authorized refresh the token
     if (authorized) {

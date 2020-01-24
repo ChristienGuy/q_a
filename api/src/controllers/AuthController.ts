@@ -1,7 +1,6 @@
 import { Response } from "express";
 import * as jwt from "jsonwebtoken";
-import passport from "passport-jwt";
-import { getRepository, Repository } from "typeorm";
+import { Repository, getCustomRepository } from "typeorm";
 import { validate } from "class-validator";
 import {
   Post,
@@ -10,18 +9,41 @@ import {
   UnauthorizedError,
   BodyParam,
   JsonController,
-  OnUndefined
+  OnUndefined,
+  CookieParam,
+  Get
 } from "routing-controllers";
 
+import { UserRepository } from "../repository/UserRepository";
 import { User } from "../entity/User";
 import config from "../config/config";
 
 // TODO: move shared auth logic into service
 @JsonController("/auth")
 class AuthController {
-  private userRepository: Repository<User>;
+  private userRepository: UserRepository;
   constructor() {
-    this.userRepository = getRepository(User);
+    this.userRepository = getCustomRepository(UserRepository);
+  }
+
+  @Get("/refresh")
+  async refresh(@CookieParam("jwt", { type: "string" }) jwt) {
+    // TODO: return error when unauthorised
+    let user;
+    try {
+      user = await this.userRepository.findByToken(jwt);
+    } catch (error) {
+      throw new UnauthorizedError("invalid token");
+    }
+
+    return user;
+  }
+
+  @OnUndefined(200)
+  @Get("/logout")
+  async logout(@Res() res: Response) {
+    res.cookie("jwt", null);
+    return;
   }
 
   @OnUndefined(203)
@@ -40,16 +62,16 @@ class AuthController {
     try {
       user = await this.userRepository.findOneOrFail({
         where: { email },
-        select: ["id", "email", "password"]
+        select: ["id", "email", "password", "username"]
       });
     } catch (error) {
       // unauthorized so throw 401
-      throw new UnauthorizedError("no matching user");
+      throw new BadRequestError("could not find user");
     }
 
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
       // unauthorized so throw 401
-      throw new UnauthorizedError("invalid password");
+      throw new BadRequestError("cound not find user");
     }
 
     const token = jwt.sign(
@@ -59,8 +81,16 @@ class AuthController {
     );
 
     res.cookie("jwt", token, { httpOnly: true });
-    return;
+    console.log(user);
+
+    return {
+      email: user.email,
+      username: user.username,
+      id: user.id
+    };
   }
+
+  // TODO: logout to clear cookie
 
   @Post("/change-password")
   async changePassword(

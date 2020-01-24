@@ -1,18 +1,24 @@
-import Link from "next/link";
 import { NextPage } from "next";
-import fetch from "isomorphic-unfetch";
-
+import styled from "styled-components";
+import Link from "next/link";
 import { Question } from "../types/api";
 import MainLayout from "../components/MainLayout";
+import ApiClient from "../apiClient";
 
 type Props = {
   questions: Question[];
 };
 
+const S = {
+  H1: styled.h1`
+    font-size: 4rem;
+  `
+};
+
 const Questions: NextPage<Props> = ({ questions }) => {
   return (
     <MainLayout>
-      <h1>Questions</h1>
+      <S.H1>Questions</S.H1>
       <ul>
         {questions.map(({ title, body, id }) => (
           <li key={id}>
@@ -30,8 +36,7 @@ const Questions: NextPage<Props> = ({ questions }) => {
 };
 
 Questions.getInitialProps = async (): Promise<Props> => {
-  const res = await fetch("http://localhost:8888/question");
-  const questions: Question[] = await res.json();
+  const questions = await ApiClient.getQuestions();
 
   return {
     questions

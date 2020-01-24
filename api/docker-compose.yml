@@ -6,6 +6,6 @@ services:
     ports:
       - "54320:5432"
     volumes:
-      - ~/docker-volumes/q_a/my_dbdata:/var/lib/q_a/postgresql/data
+      - ~/docker-volumes/q_a/my_dbdata:/var/lib/postgresql/data
 volumes:
   my_dbdata:

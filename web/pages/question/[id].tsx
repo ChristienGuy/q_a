@@ -1,17 +1,28 @@
 import { NextPage } from "next";
+
 import { Question } from "../../types/api";
+import { API_BASE_URL } from "../../config";
+import MainLayout from "../../components/MainLayout";
 
 type Props = {
   question: Question;
 };
 
 const QuestionPage: NextPage<Props> = ({ question }) => (
-  <div>{JSON.stringify(question)}</div>
+  <MainLayout>
+    <h1>{question.title}</h1>
+    <p>{question.body}</p>
+    <ul>
+      {question.answers.map(answer => (
+        <li>{answer.body}</li>
+      ))}
+    </ul>
+  </MainLayout>
 );
 
 QuestionPage.getInitialProps = async ({ query }): Promise<Props> => {
-  const res = await fetch(`http://localhost:8888/question/${query.id}`);
-  const question = await res.json();
+  const res = await fetch(`${API_BASE_URL}/question/${query.id}`);
+  const question: Question = await res.json();
 
   return {
     question

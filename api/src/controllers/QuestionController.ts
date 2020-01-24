@@ -31,11 +31,11 @@ class QuestionController {
 
   @Get("/:id([0-9]+)")
   async findOne(@Param("id") id: number) {
-    // TODO: use query builder to optimize the data being returned
     return this.questionRepository
       .createQueryBuilder("question")
       .select([
         "question",
+        "answerUser",
         "answerUser.email",
         "answerUser.username",
         "questionUser.email",
@@ -44,7 +44,7 @@ class QuestionController {
       ])
       .leftJoin("question.user", "questionUser")
       .leftJoin("question.answers", "answers")
-      .innerJoin("answers.user", "answerUser")
+      .leftJoin("answers.user", "answerUser")
       .getOne();
   }
 
