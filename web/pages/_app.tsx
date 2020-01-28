@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import App, { AppContext } from "next/app";
-import { ThemeProvider } from "styled-components";
 import fetch from "isomorphic-unfetch";
 
 import { API_BASE_URL } from "../config";
@@ -8,16 +7,10 @@ import UserContext from "../contexts/UserContext";
 import { User } from "../types/api";
 import ApiClient from "../apiClient";
 
-const theme = {
-  colors: {
-    primary: "#0070f3"
-  }
-};
-
 const MyApp = ({ Component, pageProps, initialUser }) => {
   const [user, setUser] = useState<User>(initialUser);
 
-  const login = async (email, password) => {
+  const login = async (email: string, password: string) => {
     const { status, statusText, response } = await ApiClient.login({
       email,
       password
