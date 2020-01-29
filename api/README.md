@@ -13,13 +13,13 @@ Node 10+
 Install local dependencies:
 
 ```bash
-npm i
+yarn
 ```
 
 Start up postgres & the node server:
 
 ```bash
-npm start
+docker-compose up
 ```
 
 exec into postgres container:
@@ -37,13 +37,19 @@ CREATE DATABASE qa;
 In a new terminal instance run initial migrations:
 
 ```bash
-npm run migration:run
+yarn migration:run
 ```
 
 This will give you a database with an admin user but otherwise completely empty.
 
-After this point you can just run:
+After this point you need to run:
 
 ```bash
-npm start
+docker-compose up
+```
+
+And then in a different terminal instance run
+
+```
+yarn start
 ```
