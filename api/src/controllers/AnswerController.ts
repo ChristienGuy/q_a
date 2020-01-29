@@ -1,12 +1,12 @@
 import { Repository, getRepository } from "typeorm";
 import {
+  NotFoundError,
+  BadRequestError,
   JsonController,
   Post,
   BodyParam,
-  NotFoundError,
   CurrentUser,
-  Get,
-  BadRequestError
+  Get
 } from "routing-controllers";
 import { Answer } from "../entity/Answer";
 import { Question } from "../entity/Question";

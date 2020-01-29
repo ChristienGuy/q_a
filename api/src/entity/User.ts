@@ -13,17 +13,22 @@ import * as bcrypt from "bcryptjs";
 import { Question } from "./Question";
 import { Vote } from "./Vote";
 import { Answer } from "./Answer";
+import { ObjectType, Field, ID } from "type-graphql";
 
 @Entity()
 @Unique(["email", "username"])
+@ObjectType()
 export class User {
+  @Field(type => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
   @Column({ unique: true })
   @IsEmail()
   email: string;
 
+  @Field()
   @Column()
   @Length(4, 20)
   username: string;
@@ -36,28 +41,33 @@ export class User {
   @IsNotEmpty()
   role: string;
 
+  // TODO: graphql relationship
   @OneToMany(
     () => Question,
     question => question.user
   )
   questions: Question[];
 
+  @Field(type => [Answer], { nullable: true })
   @OneToMany(
     () => Answer,
     answer => answer.user
   )
   answers: Answer[];
 
+  // TODO: graphql relationship
   @OneToMany(
     () => Vote,
     vote => vote.user
   )
   votes: Vote[];
 
+  @Field()
   @Column()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Field()
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;

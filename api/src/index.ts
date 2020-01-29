@@ -1,8 +1,9 @@
 import "reflect-metadata";
+import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import * as morgan from "morgan";
-
-import { app } from "./server";
+import { ApolloServer } from "apollo-server";
+import { AnswerResolver } from "./resolvers/AnswerResolver";
+import { UserResolver } from "./resolvers/UserResolver";
 
 // TODO: allow ssl: https://github.com/typestack/routing-controllers/issues/253
 // create express server as usual either createExpressServer or useExpressServer
@@ -12,12 +13,32 @@ import { app } from "./server";
 // this.app = https.createServer({key,cert}, this.app);
 // this.app.listen(433,()=>console.log('https server on 433'));
 
-createConnection()
-  .then(async () => {
-    app.use(morgan("combined"));
-
-    app.listen(8888, () => {
-      console.log("Express server has started on port 8888.");
+async function bootstrap() {
+  try {
+    await createConnection();
+    const schema = await buildSchema({
+      resolvers: [AnswerResolver, UserResolver]
     });
-  })
-  .catch(error => console.log(error));
+
+    const server = new ApolloServer({
+      schema
+    });
+
+    const { url } = await server.listen(8888);
+    console.log(`Server is running, GraphQL Playground available at ${url}`);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+bootstrap();
+
+// createConnection()
+//   .then(async () => {
+//     app.use(morgan("combined"));
+
+//     app.listen(8888, () => {
+//       console.log("Express server has started on port 8888.");
+//     });
+//   })
+//   .catch(error => console.log(error));
