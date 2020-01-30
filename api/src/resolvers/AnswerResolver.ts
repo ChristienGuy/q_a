@@ -3,12 +3,15 @@ import { Answer } from "../entity/Answer";
 import { Repository, getRepository } from "typeorm";
 import { AnswerInput } from "./types/AnswerInput";
 import { Context } from "./types/Context";
+import { Question } from "../entity/Question";
 
 @Resolver(Answer)
 export class AnswerResolver {
   private readonly answerRepository: Repository<Answer>;
+  private readonly questionRepository: Repository<Question>;
   constructor() {
     this.answerRepository = getRepository(Answer);
+    this.questionRepository = getRepository(Question);
   }
 
   @Query(returns => Answer, { nullable: true })
@@ -25,14 +28,18 @@ export class AnswerResolver {
 
   @Mutation(returns => Answer)
   async addAnswer(
-    @Arg("answer") answerInput: AnswerInput,
+    @Arg("answer") { questionId, body }: AnswerInput,
     @Ctx() { user }: Context
-  ) {
+  ): Promise<Answer> {
+    const question: Question = await this.questionRepository.findOne(
+      questionId
+    );
+
     const answer = this.answerRepository.create({
-      ...answerInput,
+      body,
+      question,
       user
     });
-
     return this.answerRepository.save(answer);
   }
 }

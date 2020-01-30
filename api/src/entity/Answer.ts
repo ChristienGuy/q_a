@@ -13,6 +13,8 @@ import { User } from "./User";
 import { Vote } from "./Vote";
 import { Question } from "./Question";
 import { ObjectType, Field, ID } from "type-graphql";
+import { Lazy } from "../resolvers/helpers";
+import { fieldsConflictMessage } from "graphql/validation/rules/OverlappingFieldsCanBeMerged";
 
 @Unique(["question", "user"])
 @Entity()
@@ -25,15 +27,18 @@ export class Answer {
   @Field(type => User)
   @ManyToOne(
     type => User,
-    user => user.answers
+    user => user.answers,
+    { lazy: true }
   )
-  user: User;
+  user: Lazy<User>;
 
+  @Field(type => Question)
   @ManyToOne(
     type => Question,
-    question => question.answers
+    question => question.answers,
+    { lazy: true }
   )
-  question: Question;
+  question: Lazy<Question>;
 
   @OneToMany(
     type => Vote,

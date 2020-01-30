@@ -1,9 +1,12 @@
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { createConnection } from "typeorm";
+import { createConnection, getRepository } from "typeorm";
 import { ApolloServer } from "apollo-server";
 import { AnswerResolver } from "./resolvers/AnswerResolver";
 import { UserResolver } from "./resolvers/UserResolver";
+import { User } from "./entity/User";
+import { Context } from "./resolvers/types/Context";
+import { QuestionResolver } from "./resolvers/QuestionResolver";
 
 // TODO: allow ssl: https://github.com/typestack/routing-controllers/issues/253
 // create express server as usual either createExpressServer or useExpressServer
@@ -17,11 +20,18 @@ async function bootstrap() {
   try {
     await createConnection();
     const schema = await buildSchema({
-      resolvers: [AnswerResolver, UserResolver]
+      resolvers: [__dirname + "/resolvers/**/*.{ts,js}"]
     });
 
+    const user = await getRepository(User).findOne(1);
+
+    const context: Context = {
+      user
+    };
+
     const server = new ApolloServer({
-      schema
+      schema,
+      context
     });
 
     const { url } = await server.listen(8888);

@@ -14,6 +14,7 @@ import { Question } from "./Question";
 import { Vote } from "./Vote";
 import { Answer } from "./Answer";
 import { ObjectType, Field, ID } from "type-graphql";
+import { Lazy } from "../resolvers/helpers";
 
 @Entity()
 @Unique(["email", "username"])
@@ -48,12 +49,13 @@ export class User {
   )
   questions: Question[];
 
-  @Field(type => [Answer], { nullable: true })
+  @Field(type => [Answer])
   @OneToMany(
     () => Answer,
-    answer => answer.user
+    answer => answer.user,
+    { lazy: true }
   )
-  answers: Answer[];
+  answers: Lazy<Answer[]>;
 
   // TODO: graphql relationship
   @OneToMany(
