@@ -6,12 +6,24 @@ import {
   Mutation,
   Ctx,
   FieldResolver,
-  Root
+  Root,
+  ObjectType,
+  Field,
+  SymbolKeysNotSupportedError
 } from "type-graphql";
 import { Question } from "../entity/Question";
 import { Repository, getRepository } from "typeorm";
 import { QuestionInput } from "./types/QuestionInput";
 import { Context } from "vm";
+
+@ObjectType()
+class QuestionsResponse {
+  @Field(type => [Question])
+  items: Question[];
+
+  @Field(type => Int)
+  totalCount: number;
+}
 
 @Resolver(Question)
 export class QuestionResolver {
@@ -32,9 +44,20 @@ export class QuestionResolver {
     return this.questionRepository.findOne(questionId);
   }
 
-  @Query(returns => [Question])
-  async questions(): Promise<Question[]> {
-    return this.questionRepository.find();
+  @Query(returns => QuestionsResponse)
+  async questions(
+    @Arg("page", { nullable: true }) page: number,
+    @Arg("perPage", { nullable: true, defaultValue: 10 }) perPage: number
+  ): Promise<QuestionsResponse> {
+    const [items, totalCount] = await this.questionRepository.findAndCount({
+      take: perPage,
+      skip: (page - 1) * perPage
+    });
+
+    return {
+      items,
+      totalCount
+    };
   }
 
   @Mutation(returns => Question)

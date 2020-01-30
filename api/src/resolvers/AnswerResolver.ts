@@ -1,9 +1,27 @@
-import { Resolver, Query, Arg, Int, Mutation, Ctx } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Arg,
+  Int,
+  Mutation,
+  Ctx,
+  ObjectType,
+  Field
+} from "type-graphql";
 import { Answer } from "../entity/Answer";
 import { Repository, getRepository } from "typeorm";
 import { AnswerInput } from "./types/AnswerInput";
 import { Context } from "./types/Context";
 import { Question } from "../entity/Question";
+
+@ObjectType()
+class AnswersResponse {
+  @Field(type => [Answer])
+  items: Answer[];
+
+  @Field(type => Int)
+  totalCount: number;
+}
 
 @Resolver(Answer)
 export class AnswerResolver {
@@ -21,9 +39,20 @@ export class AnswerResolver {
     return this.answerRepository.findOne(answerId);
   }
 
-  @Query(returns => [Answer])
-  async answers(): Promise<Answer[]> {
-    return this.answerRepository.find();
+  @Query(returns => AnswersResponse)
+  async answers(
+    @Arg("page", { nullable: true }) page: number,
+    @Arg("perPage", { nullable: true }) perPage: number
+  ): Promise<AnswersResponse> {
+    const [items, totalCount] = await this.answerRepository.findAndCount({
+      take: perPage,
+      skip: (page - 1) * perPage
+    });
+
+    return {
+      items,
+      totalCount
+    };
   }
 
   @Mutation(returns => Answer)

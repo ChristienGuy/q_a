@@ -34,7 +34,7 @@ export class User {
   @Length(4, 20)
   username: string;
 
-  @Column({ select: false })
+  @Column()
   @Length(4, 100)
   password: string;
 
@@ -43,11 +43,13 @@ export class User {
   role: string;
 
   // TODO: graphql relationship
+  @Field(type => [Question])
   @OneToMany(
     () => Question,
-    question => question.user
+    question => question.user,
+    { lazy: true }
   )
-  questions: Question[];
+  questions: Lazy<Question[]>;
 
   @Field(type => [Answer])
   @OneToMany(
