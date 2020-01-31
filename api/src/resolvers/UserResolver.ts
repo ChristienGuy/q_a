@@ -34,7 +34,6 @@ export class UserResolver {
       throw new AuthenticationError("incorrect");
     }
 
-    // TODO: set token cookies
     const tokens = getTokens(user);
     const { access, refresh } = getCookies(tokens);
     res.cookie(...refresh);
