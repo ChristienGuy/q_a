@@ -32,6 +32,7 @@ type Mutation {
   addQuestion(question: QuestionInput!): Question!
   login(password: String!, email: String!): User!
   logout: Boolean!
+  register(username: String!, password: String!, email: String!): User!
 }
 
 type Query {
