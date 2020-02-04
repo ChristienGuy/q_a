@@ -1,5 +1,5 @@
 import { CookieOptions } from "express";
-import config from "./config/config";
+import config from "../config/config";
 
 export function getCookies({
   accessToken,

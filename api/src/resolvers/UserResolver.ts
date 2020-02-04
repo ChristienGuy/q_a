@@ -3,8 +3,8 @@ import { User } from "../entity/User";
 import { Repository, getRepository } from "typeorm";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
 import { Response, Request } from "express";
-import { getTokens } from "../get-tokens";
-import { getCookies } from "../get-auth-cookies";
+import { getTokens } from "../util/get-tokens";
+import { getCookies } from "../util/get-auth-cookies";
 import config from "../config/config";
 import { validate } from "class-validator";
 

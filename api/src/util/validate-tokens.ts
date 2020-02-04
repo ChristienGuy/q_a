@@ -1,5 +1,5 @@
 import { verify } from "jsonwebtoken";
-import config from "./config/config";
+import config from "../config/config";
 
 export function validateAccessToken(token) {
   try {

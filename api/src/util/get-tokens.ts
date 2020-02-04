@@ -1,5 +1,5 @@
 import { sign } from "jsonwebtoken";
-import config from "./config/config";
+import config from "../config/config";
 
 export function getTokens(user) {
   const sevenDays = 60 * 60 * 24 * 7 * 1000;

@@ -8,13 +8,13 @@ import {
   FieldResolver,
   Root,
   ObjectType,
-  Field,
-  SymbolKeysNotSupportedError
+  Field
 } from "type-graphql";
 import { Question } from "../entity/Question";
 import { Repository, getRepository } from "typeorm";
 import { QuestionInput } from "./types/QuestionInput";
-import { Context } from "vm";
+import { AuthenticationError } from "apollo-server-express";
+import { Request } from "express";
 
 @ObjectType()
 class QuestionsResponse {
@@ -63,11 +63,14 @@ export class QuestionResolver {
   @Mutation(returns => Question)
   async addQuestion(
     @Arg("question") questionInput: QuestionInput,
-    @Ctx() { user }: Context
+    @Ctx() { req }: { req: Request }
   ): Promise<Question> {
+    if (!req.user) {
+      throw new AuthenticationError("no account");
+    }
     const answer = this.questionRepository.create({
       ...questionInput,
-      user
+      user: req.user
     });
     return this.questionRepository.save(answer);
   }

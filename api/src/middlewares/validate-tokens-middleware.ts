@@ -1,16 +1,17 @@
-import { validateRefreshToken } from "../validate-tokens";
+import { validateRefreshToken } from "../util/validate-tokens";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import { Request, Response, NextFunction } from "express";
 import config from "../config/config";
-import { getTokens } from "../get-tokens";
-import { getCookies } from "../get-auth-cookies";
+import { getTokens } from "../util/get-tokens";
+import { getCookies } from "../util/get-auth-cookies";
 
 type Token = {
   user: {
     id: number;
   };
 };
+
 export async function validateTokensMiddleware(
   req: Request,
   res: Response,
