@@ -21,6 +21,12 @@ export class UserResolver {
     return this.userRepository.find();
   }
 
+  @Authorized([USER_ROLES.ADMIN])
+  @Query(returns => User)
+  async user(@Arg("userId") userId: number): Promise<User> {
+    return this.userRepository.findOne(userId);
+  }
+
   @Mutation(type => User)
   async login(
     @Arg("email") email: string,

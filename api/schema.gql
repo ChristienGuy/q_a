@@ -41,6 +41,7 @@ type Query {
   question(questionId: Int!): Question
   questions(perPage: Float = 10, page: Float): QuestionsResponse!
   users: [User!]!
+  user(userId: Float!): User!
 }
 
 type Question {
