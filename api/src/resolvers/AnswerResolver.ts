@@ -6,13 +6,14 @@ import {
   Mutation,
   Ctx,
   ObjectType,
-  Field
+  Field,
+  Authorized
 } from "type-graphql";
 import { Answer } from "../entity/Answer";
 import { Repository, getRepository } from "typeorm";
 import { AnswerInput } from "./types/AnswerInput";
-import { Context } from "./types/Context";
 import { Question } from "../entity/Question";
+import { Context } from "../context.interface";
 
 @ObjectType()
 class AnswersResponse {
@@ -55,10 +56,11 @@ export class AnswerResolver {
     };
   }
 
+  @Authorized()
   @Mutation(returns => Answer)
   async addAnswer(
     @Arg("answer") { questionId, body }: AnswerInput,
-    @Ctx() { user }: Context
+    @Ctx() { req }: Context
   ): Promise<Answer> {
     const question: Question = await this.questionRepository.findOne(
       questionId
@@ -67,7 +69,7 @@ export class AnswerResolver {
     const answer = this.answerRepository.create({
       body,
       question,
-      user
+      user: req.user
     });
     return this.answerRepository.save(answer);
   }
