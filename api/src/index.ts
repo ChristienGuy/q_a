@@ -7,17 +7,10 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { validateTokensMiddleware } from "./middlewares/validate-tokens-middleware";
 
-import { buildSchema, AuthChecker } from "type-graphql";
+import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { Context } from "./context.interface";
-
-const authChecker: AuthChecker<Context> = ({ context: { req } }) => {
-  if (!req.user) {
-    return false;
-  }
-
-  return true;
-};
+import { authChecker } from "./custom-auth-checker";
 
 async function bootstrap() {
   try {
@@ -30,7 +23,7 @@ async function bootstrap() {
     const schema = await buildSchema({
       resolvers: [__dirname + "/resolvers/**/*.{ts,js}"],
       emitSchemaFile: true,
-      authChecker
+      authChecker: authChecker
     });
 
     const apolloServer = new ApolloServer({

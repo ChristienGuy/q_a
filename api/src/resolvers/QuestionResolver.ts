@@ -8,7 +8,8 @@ import {
   FieldResolver,
   Root,
   ObjectType,
-  Field
+  Field,
+  Authorized
 } from "type-graphql";
 import { Question } from "../entity/Question";
 import { Repository, getRepository } from "typeorm";
@@ -60,6 +61,7 @@ export class QuestionResolver {
     };
   }
 
+  @Authorized()
   @Mutation(returns => Question)
   async addQuestion(
     @Arg("question") questionInput: QuestionInput,

@@ -1,12 +1,12 @@
-import { Resolver, Query, Mutation, Arg, Ctx } from "type-graphql";
+import { Resolver, Query, Mutation, Arg, Ctx, Authorized } from "type-graphql";
 import { User } from "../entity/User";
 import { Repository, getRepository } from "typeorm";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
-import { Response, Request } from "express";
-import { getTokens } from "../util/get-tokens";
-import { getCookies } from "../util/get-auth-cookies";
 import config from "../config/config";
 import { validate } from "class-validator";
+import { USER_ROLES } from "../constants";
+import { Context } from "../context.interface";
+import { setAuthCookies } from "../util/set-auth-cookies";
 
 @Resolver(User)
 export class UserResolver {
@@ -15,6 +15,7 @@ export class UserResolver {
     this.userRepository = getRepository(User);
   }
 
+  @Authorized([USER_ROLES.ADMIN])
   @Query(returns => [User])
   async users(): Promise<User[]> {
     return this.userRepository.find();
@@ -24,7 +25,7 @@ export class UserResolver {
   async login(
     @Arg("email") email: string,
     @Arg("password") password: string,
-    @Ctx() { res }: { res: Response; req: Request }
+    @Ctx() context: Context
   ) {
     // TODO: catch failure
     let user: User;
@@ -40,16 +41,13 @@ export class UserResolver {
       throw new AuthenticationError("incorrect");
     }
 
-    const tokens = getTokens(user);
-    const { access, refresh } = getCookies(tokens);
-    res.cookie(...refresh);
-    res.cookie(...access);
+    setAuthCookies(context, user);
 
     return user;
   }
 
   @Mutation(returns => Boolean)
-  async logout(@Ctx() { res }: { res: Response }): Promise<boolean> {
+  async logout(@Ctx() { res }): Promise<boolean> {
     res.clearCookie(config.cookieNames.access);
     res.clearCookie(config.cookieNames.refresh);
     return true;
@@ -59,13 +57,14 @@ export class UserResolver {
   async register(
     @Arg("email") email: string,
     @Arg("password") password: string,
-    @Arg("username") username: string
+    @Arg("username") username: string,
+    @Ctx() context: Context
   ): Promise<User> {
     let user = new User();
     user.email = email;
     user.username = username;
     user.password = password;
-    user.role = "user";
+    user.role = USER_ROLES.USER;
 
     const errors = await validate(User);
     if (errors.length > 0) {
@@ -80,6 +79,7 @@ export class UserResolver {
       throw new UserInputError("invalid");
     }
 
+    setAuthCookies(context, user);
     return user;
   }
 
