@@ -17,6 +17,7 @@ export default function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
   return PaginatedResponseClass;
 }
 
+// TODO: work out why this doesn't work when imported by Question.ts
 @ObjectType()
 export class AnswersResponse extends PaginatedResponse(Answer) {}
 

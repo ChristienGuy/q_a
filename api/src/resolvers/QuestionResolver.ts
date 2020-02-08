@@ -32,7 +32,7 @@ export class QuestionResolver {
     this.answersService = new AnswersService();
   }
 
-  @Query(returns => Question, { nullable: true })
+  @Query(returns => Question)
   async question(
     @Arg("questionId", type => Int) questionId: number
   ): Promise<Question> {
