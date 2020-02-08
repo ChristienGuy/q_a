@@ -8,7 +8,6 @@ export const authChecker: AuthChecker<Context> = (
   if (!req.user) {
     return false;
   }
-  console.log("ROLES", roles);
 
   if (!roles.includes(req.user.role)) {
     return false;

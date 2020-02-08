@@ -5,32 +5,27 @@ import {
   Int,
   Mutation,
   Ctx,
-  ObjectType,
-  Field,
-  Authorized
+  Authorized,
+  Args
 } from "type-graphql";
 import { Answer } from "../entity/Answer";
 import { Repository, getRepository } from "typeorm";
 import { AnswerInput } from "./types/AnswerInput";
 import { Question } from "../entity/Question";
 import { Context } from "../context.interface";
-
-@ObjectType()
-class AnswersResponse {
-  @Field(type => [Answer])
-  items: Answer[];
-
-  @Field(type => Int)
-  totalCount: number;
-}
+import { AnswersResponse } from "./types/PaginatedResponse";
+import { PaginationArgs } from "./types/PaginationArgs";
+import { AnswersService } from "../services/AnswersService";
 
 @Resolver(Answer)
 export class AnswerResolver {
   private readonly answerRepository: Repository<Answer>;
   private readonly questionRepository: Repository<Question>;
+  private readonly answersService: AnswersService;
   constructor() {
     this.answerRepository = getRepository(Answer);
     this.questionRepository = getRepository(Question);
+    this.answersService = new AnswersService();
   }
 
   @Query(returns => Answer, { nullable: true })
@@ -41,19 +36,8 @@ export class AnswerResolver {
   }
 
   @Query(returns => AnswersResponse)
-  async answers(
-    @Arg("page", { nullable: true }) page: number,
-    @Arg("perPage", { nullable: true }) perPage: number
-  ): Promise<AnswersResponse> {
-    const [items, totalCount] = await this.answerRepository.findAndCount({
-      take: perPage,
-      skip: (page - 1) * perPage
-    });
-
-    return {
-      items,
-      totalCount
-    };
+  async answers(@Args() args: PaginationArgs): Promise<AnswersResponse> {
+    return this.answersService.getAnswers(args);
   }
 
   @Authorized()

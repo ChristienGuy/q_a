@@ -12,8 +12,9 @@ import { User } from "./User";
 import { Vote } from "./Vote";
 import { Answer } from "./Answer";
 import { MaxLength } from "class-validator";
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Int } from "type-graphql";
 import { Lazy } from "../resolvers/helpers";
+import { AnswersResponse } from "../resolvers/types/PaginatedResponse";
 
 @Entity()
 @ObjectType()
@@ -38,7 +39,7 @@ export class Question {
   )
   votes: Vote[];
 
-  @Field(type => [Answer])
+  @Field(type => AnswersResponse)
   @OneToMany(
     () => Answer,
     answer => answer.question,

@@ -14,7 +14,6 @@ import { Vote } from "./Vote";
 import { Question } from "./Question";
 import { ObjectType, Field, ID } from "type-graphql";
 import { Lazy } from "../resolvers/helpers";
-import { fieldsConflictMessage } from "graphql/validation/rules/OverlappingFieldsCanBeMerged";
 
 @Unique(["question", "user"])
 @Entity()
