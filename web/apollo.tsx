@@ -65,8 +65,13 @@ export const withApollo = ({ ssr = true } = {}) => PageComponent => {
       let pageProps = {};
       if (PageComponent.getInitialProps) {
         pageProps = await PageComponent.getInitialProps(ctx);
-      } else if (inAppContext) {
-        pageProps = await App.getInitialProps(ctx);
+      }
+      if (inAppContext) {
+        const appProps = await App.getInitialProps(ctx);
+        pageProps = {
+          ...pageProps,
+          ...appProps
+        };
       }
 
       // Only on the server:

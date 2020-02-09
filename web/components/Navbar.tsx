@@ -17,6 +17,12 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
+const LOGOUT_MUTATION = gql`
+  mutation Logout {
+    logout
+  }
+`;
+
 const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,10 +66,17 @@ const LoginForm = ({ onLogin }) => {
 const Navbar: React.FC = () => {
   const { setUser, user } = useContext(UserContext);
   const [showLogin, setShowLogin] = useState(false);
+  const [logout, { data }] = useMutation(LOGOUT_MUTATION);
 
   const onLogin = loginResponse => {
     setShowLogin(false);
     setUser(loginResponse);
+  };
+
+  const logoutHandler = () => {
+    logout();
+    setUser(null);
+    // TODO: clear apollo cache when logging out
   };
 
   return (
@@ -100,7 +113,7 @@ const Navbar: React.FC = () => {
           }}
         >
           <span>{user.username}</span>
-          {/* <button onClick={logout}>Logout</button> */}
+          <button onClick={logoutHandler}>Logout</button>
         </div>
       ) : (
         <>

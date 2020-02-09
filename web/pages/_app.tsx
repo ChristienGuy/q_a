@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-
-import { ApolloProvider, useQuery } from "@apollo/react-hooks";
-import { withApollo } from "../apollo";
-import "@reach/dialog/styles.css";
-
-import UserContext from "../contexts/UserContext";
 import gql from "graphql-tag";
+
+import { withApollo } from "../apollo";
+import UserContext from "../contexts/UserContext";
+
+import "@reach/dialog/styles.css";
 
 const REFRESH_QUERY = gql`
   query Refresh {
@@ -37,12 +36,13 @@ MyApp.getInitialProps = async ({ ctx }) => {
 
   let user = null;
 
+  const headers = ctx?.req?.headers;
   try {
     const { data, error } = await apolloClient.query({
       query: REFRESH_QUERY,
       context: {
         headers: {
-          ...ctx.req.headers
+          ...headers
         }
       }
     });
