@@ -19,7 +19,7 @@ input AnswerInput {
 
 type AnswersResponse {
   items: [Answer!]!
-  totalCount: Int!
+  total: Int!
 }
 
 """
@@ -37,9 +37,9 @@ type Mutation {
 
 type Query {
   answer(answerId: Int!): Answer
-  answers(perPage: Float, page: Float): AnswersResponse!
-  question(questionId: Int!): Question
-  questions(perPage: Float = 10, page: Float): QuestionsResponse!
+  answers(page: Int = 1, perPage: Int = 10): AnswersResponse!
+  question(questionId: Int!): Question!
+  questions(page: Int = 1, perPage: Int = 10): QuestionsResponse!
   users: [User!]!
   user(userId: Float!): User!
 }
@@ -48,11 +48,15 @@ type Question {
   id: ID!
   title: String!
   body: String!
-  answers: [Answer!]!
+  answers(page: Int = 1, perPage: Int = 10): QuestionAnswersResponse!
   user: User!
   createdAt: DateTime!
   updatedAt: DateTime!
-  count: Int!
+}
+
+type QuestionAnswersResponse {
+  items: [Answer!]!
+  total: Int!
 }
 
 input QuestionInput {
@@ -62,15 +66,15 @@ input QuestionInput {
 
 type QuestionsResponse {
   items: [Question!]!
-  totalCount: Int!
+  total: Int!
 }
 
 type User {
   id: ID!
   email: String!
   username: String!
-  questions: [Question!]!
-  answers: [Answer!]!
+  questions(page: Int = 1, perPage: Int = 10): QuestionsResponse!
+  answers(page: Int = 1, perPage: Int = 10): AnswersResponse!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

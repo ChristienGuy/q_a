@@ -15,6 +15,10 @@ import { Vote } from "./Vote";
 import { Answer } from "./Answer";
 import { ObjectType, Field, ID } from "type-graphql";
 import { Lazy } from "../resolvers/helpers";
+import {
+  AnswersResponse,
+  QuestionsResponse
+} from "../resolvers/types/PaginatedResponse";
 
 @Entity()
 @Unique(["email", "username"])
@@ -42,8 +46,7 @@ export class User {
   @IsNotEmpty()
   role: string;
 
-  // TODO: graphql relationship
-  @Field(type => [Question])
+  @Field(type => QuestionsResponse)
   @OneToMany(
     () => Question,
     question => question.user,
@@ -51,7 +54,7 @@ export class User {
   )
   questions: Lazy<Question[]>;
 
-  @Field(type => [Answer])
+  @Field(type => AnswersResponse)
   @OneToMany(
     () => Answer,
     answer => answer.user,

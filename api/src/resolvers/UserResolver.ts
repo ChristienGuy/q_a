@@ -1,4 +1,14 @@
-import { Resolver, Query, Mutation, Arg, Ctx, Authorized } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  Ctx,
+  Authorized,
+  FieldResolver,
+  Args,
+  Root
+} from "type-graphql";
 import { User } from "../entity/User";
 import { Repository, getRepository } from "typeorm";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
@@ -7,12 +17,42 @@ import { validate } from "class-validator";
 import { USER_ROLES } from "../constants";
 import { Context } from "../context.interface";
 import { setAuthCookies } from "../util/set-auth-cookies";
+import { AnswersResponse, QuestionsResponse } from "./types/PaginatedResponse";
+import { PaginationArgs } from "./types/PaginationArgs";
+import { AnswersService } from "../services/AnswersService";
+import { QuestionsService } from "../services/QuestionsService";
 
 @Resolver(User)
 export class UserResolver {
   private readonly userRepository: Repository<User>;
+  private readonly answersService: AnswersService;
+  private readonly questionsService: QuestionsService;
   constructor() {
     this.userRepository = getRepository(User);
+    this.questionsService = new QuestionsService();
+    this.answersService = new AnswersService();
+  }
+
+  @FieldResolver(returns => AnswersResponse)
+  async answers(
+    @Root() user: User,
+    @Args() args: PaginationArgs
+  ): Promise<AnswersResponse> {
+    return this.answersService.getAnswersByUserId({
+      ...args,
+      userId: user.id
+    });
+  }
+
+  @FieldResolver(returns => QuestionsResponse)
+  async questions(
+    @Root() user: User,
+    @Args() args: PaginationArgs
+  ): Promise<QuestionsResponse> {
+    return this.questionsService.getQuestionsByUserId({
+      ...args,
+      userId: user.id
+    });
   }
 
   @Authorized([USER_ROLES.ADMIN])
@@ -88,6 +128,4 @@ export class UserResolver {
     setAuthCookies(context, user);
     return user;
   }
-
-  // TODO: change password mutation
 }

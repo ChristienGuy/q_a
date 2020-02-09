@@ -7,38 +7,32 @@ import {
   Ctx,
   FieldResolver,
   Root,
-  ObjectType,
-  Field,
-  Authorized
+  Authorized,
+  Args
 } from "type-graphql";
 import { Question } from "../entity/Question";
 import { Repository, getRepository } from "typeorm";
 import { QuestionInput } from "./types/QuestionInput";
 import { AuthenticationError } from "apollo-server-express";
-import { Request } from "express";
-
-@ObjectType()
-class QuestionsResponse {
-  @Field(type => [Question])
-  items: Question[];
-
-  @Field(type => Int)
-  totalCount: number;
-}
+import { QuestionsResponse, AnswersResponse } from "./types/PaginatedResponse";
+import { QuestionsService } from "../services/QuestionsService";
+import { PaginationArgs } from "./types/PaginationArgs";
+import { AnswersService } from "../services/AnswersService";
+import { Context } from "../context.interface";
 
 @Resolver(Question)
 export class QuestionResolver {
   private readonly questionRepository: Repository<Question>;
+  private readonly questionsService: QuestionsService;
+  private readonly answersService: AnswersService;
+
   constructor() {
     this.questionRepository = getRepository(Question);
+    this.questionsService = new QuestionsService();
+    this.answersService = new AnswersService();
   }
 
-  @FieldResolver(type => Int)
-  async count(@Root() question: Question) {
-    return this.questionRepository.count();
-  }
-
-  @Query(returns => Question, { nullable: true })
+  @Query(returns => Question)
   async question(
     @Arg("questionId", type => Int) questionId: number
   ): Promise<Question> {
@@ -46,26 +40,26 @@ export class QuestionResolver {
   }
 
   @Query(returns => QuestionsResponse)
-  async questions(
-    @Arg("page", { nullable: true }) page: number,
-    @Arg("perPage", { nullable: true, defaultValue: 10 }) perPage: number
-  ): Promise<QuestionsResponse> {
-    const [items, totalCount] = await this.questionRepository.findAndCount({
-      take: perPage,
-      skip: (page - 1) * perPage
-    });
+  async questions(@Args() args: PaginationArgs): Promise<QuestionsResponse> {
+    return this.questionsService.getQuestions(args);
+  }
 
-    return {
-      items,
-      totalCount
-    };
+  @FieldResolver(returns => AnswersResponse)
+  async answers(
+    @Root() question: Question,
+    @Args() args: PaginationArgs
+  ): Promise<AnswersResponse> {
+    return this.answersService.getAnswersByQuestionId({
+      ...args,
+      questionId: question.id
+    });
   }
 
   @Authorized()
   @Mutation(returns => Question)
   async addQuestion(
     @Arg("question") questionInput: QuestionInput,
-    @Ctx() { req }: { req: Request }
+    @Ctx() { req }: Context
   ): Promise<Question> {
     if (!req.user) {
       throw new AuthenticationError("no account");
