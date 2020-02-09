@@ -21,6 +21,8 @@ import { AnswersResponse, QuestionsResponse } from "./types/PaginatedResponse";
 import { PaginationArgs } from "./types/PaginationArgs";
 import { AnswersService } from "../services/AnswersService";
 import { QuestionsService } from "../services/QuestionsService";
+import jwt from "jsonwebtoken";
+const { jwtSecret } = config;
 
 @Resolver(User)
 export class UserResolver {
@@ -67,6 +69,23 @@ export class UserResolver {
     return this.userRepository.findOne(userId);
   }
 
+  @Query(type => User)
+  async refresh(@Ctx() context: Context) {
+    const { req } = context;
+    const { access, refresh } = req.cookies;
+
+    if (!jwt.verify(refresh, jwtSecret)) {
+      throw new AuthenticationError("refresh too old");
+    }
+
+    const { user: userData } = jwt.decode(req.cookies.refresh);
+
+    const user = await this.userRepository.findOne(userData.id);
+    setAuthCookies(context, user);
+
+    return user;
+  }
+
   @Mutation(type => User)
   async login(
     @Arg("email") email: string,
@@ -80,7 +99,7 @@ export class UserResolver {
         where: { email }
       });
     } catch {
-      throw new AuthenticationError("no use with those details");
+      throw new AuthenticationError("no user with those details");
     }
 
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {

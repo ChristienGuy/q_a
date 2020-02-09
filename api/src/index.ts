@@ -35,6 +35,7 @@ async function bootstrap() {
         }
       }
     });
+
     apolloServer.applyMiddleware({
       app
     });

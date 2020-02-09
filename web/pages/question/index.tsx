@@ -2,7 +2,6 @@ import { NextPage, NextPageContext } from "next";
 
 import { Question } from "../../types/api";
 import MainLayout from "../../components/MainLayout";
-import ApiClient from "../../apiClient";
 
 const QuestionsPage: NextPage<{
   questions: Question[];
@@ -16,12 +15,12 @@ const QuestionsPage: NextPage<{
   </MainLayout>
 );
 
-QuestionsPage.getInitialProps = async (context: NextPageContext) => {
-  const questions = await ApiClient.getQuestions();
+// QuestionsPage.getInitialProps = async (context: NextPageContext) => {
+//   const questions = await ApiClient.getQuestions();
 
-  return {
-    questions
-  };
-};
+//   return {
+//     questions
+//   };
+// };
 
 export default QuestionsPage;

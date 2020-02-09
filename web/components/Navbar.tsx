@@ -2,20 +2,36 @@ import Link from "next/link";
 import { useContext, useState, FormEvent } from "react";
 
 import { Dialog } from "@reach/dialog";
-import "@reach/dialog/styles.css";
 
 import UserContext from "../contexts/UserContext";
+import { useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 
-const LoginForm = ({ onSubmit }) => {
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      username
+      email
+      id
+    }
+  }
+`;
+
+const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [login, { data }] = useMutation(LOGIN_MUTATION);
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit({
-      email,
-      password
+    const result = await login({
+      variables: {
+        email,
+        password
+      }
     });
+
+    onLogin(result.data.login);
   };
 
   return (
@@ -42,18 +58,14 @@ const LoginForm = ({ onSubmit }) => {
 };
 
 const Navbar: React.FC = () => {
-  const { user, logout } = useContext(UserContext);
+  const { setUser, user } = useContext(UserContext);
   const [showLogin, setShowLogin] = useState(false);
-  const { login } = useContext(UserContext);
 
-  const onSubmit = async ({ email, password }) => {
-    const { status, statusText } = await login(email, password);
-
-    // TODO: handle case to show error if present
-    if (status === 200) {
-      setShowLogin(false);
-    }
+  const onLogin = loginResponse => {
+    setShowLogin(false);
+    setUser(loginResponse);
   };
+
   return (
     <nav
       style={{
@@ -88,7 +100,7 @@ const Navbar: React.FC = () => {
           }}
         >
           <span>{user.username}</span>
-          <button onClick={logout}>Logout</button>
+          {/* <button onClick={logout}>Logout</button> */}
         </div>
       ) : (
         <>
@@ -99,7 +111,7 @@ const Navbar: React.FC = () => {
             login
           </button>
           <Dialog isOpen={showLogin}>
-            <LoginForm onSubmit={onSubmit} />
+            <LoginForm onLogin={onLogin} />
           </Dialog>
         </>
       )}

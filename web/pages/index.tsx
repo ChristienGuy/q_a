@@ -1,19 +1,25 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import { Question } from "../types/api";
 import MainLayout from "../components/MainLayout";
-import ApiClient from "../apiClient";
+import { useQuery } from "@apollo/react-hooks";
+import QUESTION_QUERY from "../questions.query";
+import { withApollo } from "../apollo";
 
-type Props = {
-  questions: Question[];
-};
+const Questions: NextPage = () => {
+  const { data, loading, error } = useQuery(QUESTION_QUERY);
 
-const Questions: NextPage<Props> = ({ questions }) => {
+  if (loading) {
+    return <p>loading...</p>;
+  }
+
+  if (error) {
+    return <p>ERROR {JSON.stringify(error)}</p>;
+  }
   return (
     <MainLayout>
       <h1>Questions</h1>
       <ul>
-        {questions.map(({ title, body, id }) => (
+        {data.questions.items.map(({ title, body, id }) => (
           <li key={id}>
             <Link href="/question/[id]" as={`/question/${id}`}>
               <a>
@@ -26,14 +32,6 @@ const Questions: NextPage<Props> = ({ questions }) => {
       </ul>
     </MainLayout>
   );
-};
-
-Questions.getInitialProps = async (): Promise<Props> => {
-  const questions = await ApiClient.getQuestions();
-
-  return {
-    questions
-  };
 };
 
 export default Questions;

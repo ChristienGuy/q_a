@@ -1,44 +1,30 @@
 import React, { useState } from "react";
-import App, { AppContext } from "next/app";
-import fetch from "isomorphic-unfetch";
 
-import { API_BASE_URL } from "../config";
+import { ApolloProvider, useQuery } from "@apollo/react-hooks";
+import { withApollo } from "../apollo";
+import "@reach/dialog/styles.css";
+
 import UserContext from "../contexts/UserContext";
-import { User } from "../types/api";
-import ApiClient from "../apiClient";
+import gql from "graphql-tag";
+
+const REFRESH_QUERY = gql`
+  query Refresh {
+    refresh {
+      id
+      username
+      email
+    }
+  }
+`;
 
 const MyApp = ({ Component, pageProps, initialUser }) => {
-  const [user, setUser] = useState<User>(initialUser);
-
-  const login = async (email: string, password: string) => {
-    const { status, statusText, response } = await ApiClient.login({
-      email,
-      password
-    });
-
-    if (status === 200) {
-      setUser(response);
-    }
-
-    return {
-      status,
-      statusText,
-      response
-    };
-  };
-
-  const logout = async () => {
-    // TODO: make request to clear jwt cookie
-    await fetch(`${API_BASE_URL}/auth/logout`);
-    setUser(null);
-  };
+  const [user, setUser] = useState(initialUser);
 
   return (
     <UserContext.Provider
       value={{
-        user,
-        login,
-        logout
+        setUser,
+        user
       }}
     >
       <Component {...pageProps} />
@@ -46,33 +32,33 @@ const MyApp = ({ Component, pageProps, initialUser }) => {
   );
 };
 
-MyApp.getInitialProps = async (
-  appContext: AppContext & {
-    ctx: {
-      req: {
-        cookies: any;
-      };
-    };
-  }
-) => {
+MyApp.getInitialProps = async ({ ctx }) => {
+  const { apolloClient } = ctx;
+
   let user = null;
-  if (appContext.ctx.req) {
-    // pass through to api layer
-    const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
-      headers: {
-        ...(appContext.ctx.req.headers as any)
+
+  try {
+    const { data, error } = await apolloClient.query({
+      query: REFRESH_QUERY,
+      context: {
+        headers: {
+          ...ctx.req.headers
+        }
       }
     });
-    if (res.ok) {
-      user = await res.json();
+
+    if (error) {
+      console.error(error);
+    } else {
+      user = data.refresh;
     }
+  } catch (e) {
+    console.error("error", e);
   }
 
-  const appProps = await App.getInitialProps(appContext);
   return {
-    ...appProps,
     initialUser: user
   };
 };
 
-export default MyApp;
+export default withApollo()(MyApp);

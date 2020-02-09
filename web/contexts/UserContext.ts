@@ -1,17 +1,12 @@
-import { createContext } from "react";
+import { createContext, Dispatch } from "react";
 import { User } from "../types/api";
 
 const UserContext = createContext<{
   user: User | null;
-  login?: (
-    email: string,
-    password: string
-  ) => Promise<{ status: number; statusText: string }>;
-  logout?: () => void;
+  setUser: Dispatch<any>;
 }>({
   user: null,
-  login: null,
-  logout: null
+  setUser: null
 });
 
 export default UserContext;
