@@ -101,8 +101,8 @@ const Navbar: React.FC = () => {
           </Link>
         </li>
         <li>
-          <Link href="/questions">
-            <a>Questions</a>
+          <Link href="/question/add">
+            <a>Add a Question</a>
           </Link>
         </li>
       </ul>

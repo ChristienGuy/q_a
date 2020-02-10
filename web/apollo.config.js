@@ -2,10 +2,10 @@ const path = require("path");
 
 module.exports = {
   client: {
+    includes: [path.resolve(__dirname, "./**/*.tsx")],
     service: {
       name: "qa-server",
-      localSchemaFile: path.resolve(__dirname, "../api/schema.gql"),
-      includes: [path.resolve(__dirname, "../api/**/*.ts")]
+      url: "http://localhost:8888/graphql"
     }
   }
 };

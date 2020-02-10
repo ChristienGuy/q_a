@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 import { withApollo } from "../apollo";
 import UserContext from "../contexts/UserContext";
 
-import "@reach/dialog/styles.css";
+// import "@reach/dialog/styles.css";
 
 const REFRESH_QUERY = gql`
   query Refresh {
