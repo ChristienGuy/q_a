@@ -7,6 +7,8 @@ import UserContext from "../contexts/UserContext";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
+import styles from "./navbar.scss";
+
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -80,27 +82,14 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav
-      style={{
-        display: "flex",
-        flexDirection: "row"
-      }}
-    >
-      <ul
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          listStyle: "none",
-          margin: 0,
-          padding: 0
-        }}
-      >
-        <li style={{ padding: "0 16px" }}>
+    <nav className={styles.nav}>
+      <ul className={styles.navList}>
+        <li className={styles.listItem}>
           <Link href="/">
             <a>Home</a>
           </Link>
         </li>
-        <li>
+        <li className={styles.listItem}>
           <Link href="/question/add">
             <a>Add a Question</a>
           </Link>
