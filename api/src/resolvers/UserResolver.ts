@@ -78,7 +78,7 @@ export class UserResolver {
       throw new AuthenticationError("refresh too old");
     }
 
-    const { user: userData } = jwt.decode(req.cookies.refresh);
+    const { user: userData } = jwt.decode(req.cookies.refresh) as any;
 
     const user = await this.userRepository.findOne(userData.id);
     setAuthCookies(context, user);

@@ -45,7 +45,7 @@ This will give you a database with an admin user but otherwise completely empty.
 After this point you need to run:
 
 ```bash
-docker-compose up
+start:db
 ```
 
 And then in a different terminal instance run
