@@ -16,7 +16,10 @@ export class QuestionsService {
     return this.questionRepository.findAndCount({
       take: perPage,
       skip: (page - 1) * perPage,
-      where
+      where,
+      order: {
+        updatedAt: "DESC"
+      }
     });
   }
 

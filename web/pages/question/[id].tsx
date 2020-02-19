@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import MainLayout from "../../components/MainLayout";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 
 type Props = {
   questionId: number;
@@ -24,12 +24,39 @@ const QUESTION_QUERY = gql`
   }
 `;
 
+const ADD_ANSWER_MUTATION = gql`
+  mutation AddAnswer($answer: AnswerInput!) {
+    addAnswer(answer: $answer) {
+      id
+    }
+  }
+`;
+
 const QuestionPage: NextPage<Props> = ({ questionId }) => {
-  const { data, loading, error } = useQuery(QUESTION_QUERY, {
+  const { data, loading, error, refetch } = useQuery(QUESTION_QUERY, {
     variables: {
       questionId
     }
   });
+
+  const [addAnswer] = useMutation(ADD_ANSWER_MUTATION);
+
+  const submitAnswerForm = async e => {
+    e.preventDefault();
+
+    const answer = {
+      questionId,
+      body: e.target.body.value
+    };
+
+    await addAnswer({
+      variables: {
+        answer
+      }
+    });
+
+    await refetch();
+  };
 
   if (loading) {
     return <p>loading...</p>;
@@ -46,6 +73,14 @@ const QuestionPage: NextPage<Props> = ({ questionId }) => {
           <li>{answer.body}</li>
         ))}
       </ul>
+
+      <form onSubmit={submitAnswerForm}>
+        <label>
+          Answer:
+          <input type="text" placeholder="body" name="body" />
+        </label>
+        <input type="submit" value="add answer" />
+      </form>
     </MainLayout>
   );
 };

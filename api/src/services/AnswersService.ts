@@ -14,11 +14,16 @@ export class AnswersService {
   }
 
   private async getAnswersWhere({ page, perPage, where }) {
-    return await this.answerRepository.findAndCount({
+    const answers = await this.answerRepository.findAndCount({
       take: perPage,
       skip: (page - 1) * perPage,
-      where
+      where,
+      order: {
+        updatedAt: "DESC"
+      }
     });
+
+    return answers;
   }
 
   async getAnswers({
@@ -46,7 +51,7 @@ export class AnswersService {
       page,
       perPage,
       where: {
-        questionId
+        question: questionId
       }
     });
 
@@ -65,7 +70,7 @@ export class AnswersService {
       page,
       perPage,
       where: {
-        userId
+        user: userId
       }
     });
 

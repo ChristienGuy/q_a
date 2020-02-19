@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Head from "next/head";
 import gql from "graphql-tag";
 
 import { withApollo } from "../apollo";
@@ -26,6 +27,10 @@ const MyApp = ({ Component, pageProps, initialUser }) => {
         user
       }}
     >
+      <Head>
+        <title>Q n A</title>
+        <meta name="description" content="A Question and Answer website" />
+      </Head>
       <Component {...pageProps} />
     </UserContext.Provider>
   );

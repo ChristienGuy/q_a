@@ -15,8 +15,6 @@ const Questions: NextPage = () => {
   });
 
   const onPaginate = page => {
-    console.log("paginated", page);
-
     setPage(page);
     refetch({
       page
@@ -32,7 +30,11 @@ const Questions: NextPage = () => {
 
       {!loading && (
         <>
-          <Pagination total={data.questions.total} onClick={onPaginate} />
+          <Pagination
+            currentPage={page}
+            total={data.questions.total}
+            onClick={onPaginate}
+          />
           <ul>
             {data.questions.items.map(({ title, body, id }) => (
               <li key={id}>

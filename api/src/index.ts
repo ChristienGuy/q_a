@@ -12,6 +12,8 @@ import { createConnection } from "typeorm";
 import { Context } from "./context.interface";
 import { authChecker } from "./custom-auth-checker";
 
+const { PORT } = process.env;
+
 async function bootstrap() {
   try {
     const app = express();
@@ -40,9 +42,10 @@ async function bootstrap() {
       app
     });
 
-    app.listen(8888);
+    app.listen(PORT || 8888);
     console.log(
-      `Server is running, GraphQL Playground available at localhost:8888${apolloServer.graphqlPath}`
+      `Server is running, GraphQL Playground available at localhost:${PORT ||
+        "8888"}${apolloServer.graphqlPath}`
     );
   } catch (e) {
     console.log(e);
