@@ -14,7 +14,7 @@ import { authChecker } from "./custom-auth-checker";
 
 const { PORT } = process.env;
 
-const whitelist = ["question-answer.herokuapp.com"];
+const whitelist = ["https://question-answer.herokuapp.com"];
 
 const corsOptions = {
   origin: function(origin, callback) {
