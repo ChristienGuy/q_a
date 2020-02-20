@@ -7,7 +7,7 @@ const base = {
   url: "postgresql://postgres:gretter@localhost:54320/qa",
   synchronize: true,
   logging: false,
-  entities: ["src/entity/**/*.[jt]s"],
+  entities: ["src/entity/**/*.ts"],
   migrations: ["src/migration/**/*.[jt]s"],
   subscribers: ["src/subscriber/**/*.[jt]s"],
   cli: {
@@ -21,7 +21,10 @@ const config = {
   test: {},
   dev: {},
   production: {
-    url: DATABASE_URL
+    url: DATABASE_URL,
+    entities: ["entity/**/*.js"],
+    migrations: ["migration/**/*.js"],
+    subscribers: ["subscriber/**/*.js"]
   }
 };
 

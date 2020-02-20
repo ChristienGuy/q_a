@@ -16,7 +16,8 @@ const { PORT } = process.env;
 
 const whitelist = [
   "https://question-answer.herokuapp.com",
-  "http://localhost:8888"
+  "http://localhost:8888",
+  "http://localhost:5000"
 ];
 
 const corsOptions = {
