@@ -1,19 +1,15 @@
-import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
-
 const { DATABASE_URL } = process.env;
 
 // TODO: setup url to use DATABASE_URL env var so it works with heroku
 // TODO: rest of the heroku config
-const base: PostgresConnectionOptions = {
+const base = {
   type: "postgres",
-  url: DATABASE_URL
-    ? DATABASE_URL
-    : "postgresql://postgres:gretter@localhost:54320/qa",
+  url: "postgresql://postgres:gretter@localhost:54320/qa",
   synchronize: true,
   logging: false,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migration/**/*.ts"],
-  subscribers: ["src/subscriber/**/*.ts"],
+  entities: ["src/entity/**/*.[jt]s"],
+  migrations: ["src/migration/**/*.[jt]s"],
+  subscribers: ["src/subscriber/**/*.[jt]s"],
   cli: {
     entitiesDir: "src/entity",
     migrationsDir: "src/migration",
@@ -25,11 +21,11 @@ const config = {
   test: {},
   dev: {},
   production: {
-    // url: process.env.DATABASE_URL
+    url: "postgresql://postgres:gretter@localhost:54320/qa"
   }
 };
 
-export = {
+module.exports = {
   ...base,
   ...config[process.env.NODE_ENV || "production"]
 };
