@@ -53,8 +53,7 @@ async function bootstrap() {
 
     apolloServer.applyMiddleware({
       app,
-      cors: corsOptions,
-      path: "/graphql"
+      cors: corsOptions
     });
 
     app.listen(PORT || 8888);
