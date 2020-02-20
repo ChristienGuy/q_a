@@ -21,7 +21,7 @@ const config = {
   test: {},
   dev: {},
   production: {
-    url: "postgresql://postgres:gretter@localhost:54320/qa"
+    url: DATABASE_URL
   }
 };
 
