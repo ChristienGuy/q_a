@@ -14,6 +14,18 @@ import { authChecker } from "./custom-auth-checker";
 
 const { PORT } = process.env;
 
+const whitelist = ["question-answer.herokuapp.com"];
+
+const corsOptions = {
+  origin: function(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
+};
+
 async function bootstrap() {
   try {
     const app = express();
@@ -35,11 +47,14 @@ async function bootstrap() {
         settings: {
           "request.credentials": "include"
         }
-      }
+      },
+      introspection: true
     });
 
     apolloServer.applyMiddleware({
-      app
+      app,
+      cors: corsOptions,
+      path: "/graphql"
     });
 
     app.listen(PORT || 8888);
