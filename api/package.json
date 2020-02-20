@@ -50,7 +50,7 @@
     "dev:db": "docker-compose up",
     "dev": "ts-node-dev ./src/index.ts",
     "build": "tsc -p .",
-    "start": "cd ./build && node ./src",
+    "start": "cd build && node src",
     "migration:run": "ts-node node_modules/.bin/typeorm migration:run"
   }
 }
