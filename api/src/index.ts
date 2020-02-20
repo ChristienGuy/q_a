@@ -18,6 +18,8 @@ const whitelist = ["https://question-answer.herokuapp.com"];
 
 const corsOptions = {
   origin: function(origin, callback) {
+    console.log("origin", origin);
+
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
