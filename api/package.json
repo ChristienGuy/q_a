@@ -47,10 +47,10 @@
   "scripts": {
     "test": "jest --watch",
     "test-single": "jest",
-    "start:db": "docker-compose up",
-    "start": "ts-node-dev ./src/index.ts",
+    "dev:db": "docker-compose up",
+    "dev": "ts-node-dev ./src/index.ts",
     "build": "tsc -p .",
-    "prod": "cd ./build && node ./src",
+    "start": "cd ./build && node ./src",
     "migration:run": "ts-node node_modules/.bin/typeorm migration:run"
   }
 }
