@@ -14,13 +14,16 @@ import { authChecker } from "./custom-auth-checker";
 
 const { PORT } = process.env;
 
-const whitelist = ["https://question-answer.herokuapp.com"];
+const whitelist = [
+  "https://question-answer.herokuapp.com",
+  "http://localhost:8888"
+];
 
 const corsOptions = {
-  origin: function(origin, callback) {
-    console.log("origin", origin);
-
-    if (whitelist.indexOf(origin) !== -1) {
+  origin: (origin, callback) => {
+    if (!origin) {
+      callback(null, true);
+    } else if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -34,6 +37,7 @@ async function bootstrap() {
     app.use(morgan("combined"));
     app.use(cookieParser());
     app.use(validateTokensMiddleware);
+    // app.use(cors(corsOptions));
 
     await createConnection();
     const schema = await buildSchema({
@@ -55,7 +59,8 @@ async function bootstrap() {
 
     apolloServer.applyMiddleware({
       app,
-      cors: corsOptions
+      cors: corsOptions,
+      path: "/"
     });
 
     app.listen(PORT || 8888);
