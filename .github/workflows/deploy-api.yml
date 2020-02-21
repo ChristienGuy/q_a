@@ -9,10 +9,10 @@ on:
 jobs:
   build:
     name: build api
-  steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: ["10"]
-    - run: yarn install
-    - run: git subtree push --prefix api heroku master
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - run: yarn install
+      - run: git subtree push --prefix api heroku master
