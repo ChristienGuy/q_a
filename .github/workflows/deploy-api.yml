@@ -12,10 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
       - name: set remote
         run: git remote add heroku https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/question-answer.git
-      - run: yarn install
       - run: git subtree push --prefix api heroku master
