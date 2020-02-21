@@ -1,14 +1,14 @@
-name: Deploy API
+name: Deploy api
 on:
   push:
     branches:
       - master
-    # paths:
-    #   - "api/**"
+    paths:
+      - "api/**"
 
 jobs:
   build:
-    name: build api
+    name: Build & Deploy api
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
