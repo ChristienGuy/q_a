@@ -12,4 +12,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git subtree push -f --prefix api https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/question-answer.git master
+      - run: git subtree split --prefix dist -b herokuBranch
+      - run: git push -f https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/question-answer.git herokuBranch:master
