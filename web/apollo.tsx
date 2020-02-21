@@ -155,7 +155,8 @@ const createApolloClient = (initialState = {}) => {
   return new ApolloClient({
     ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
     link: new HttpLink({
-      uri: "http://localhost:3000/api/graphql", // Server URL (must be absolute)
+      // uri: "http://localhost:3000/api/graphql", // Server URL (must be absolute)
+      uri: "https://q-a.now.sh/api/graphql", // Server URL (must be absolute)
       credentials: "include", // Additional fetch() options like `credentials` or `headers`
       fetch
     }),

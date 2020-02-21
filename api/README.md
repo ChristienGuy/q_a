@@ -53,3 +53,13 @@ And then in a different terminal instance run
 ```
 yarn start
 ```
+
+## Deploying
+
+Commit your changes.
+
+From the root run.
+
+```bash
+git subtree push --prefix api heroku master
+```
