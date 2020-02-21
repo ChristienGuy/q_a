@@ -7,7 +7,7 @@ import UserContext from "../contexts/UserContext";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import styles from "./navbar.scss";
+import styles from "./Navbar.scss";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
