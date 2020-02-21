@@ -68,7 +68,7 @@ async function bootstrap() {
     });
 
     app.listen(PORT || 8888);
-    console.log("test");
+    console.log("test2");
 
     console.log(
       `Server is running, GraphQL Playground available at localhost:${PORT ||
