@@ -18,7 +18,7 @@ const whitelist = [
   "https://question-answer.herokuapp.com",
   "http://localhost:8888",
   "http://localhost:5000",
-  "https://q-a.now.sh/"
+  "https://q-a.now.sh"
 ];
 
 const corsOptions = {
