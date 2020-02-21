@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import s from "./MainLAyout.scss";
+import s from "./MainLayout.scss";
 
 const MainLayout: React.FC = ({ children }) => (
   <div className={s.wrapper}>

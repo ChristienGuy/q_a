@@ -7,7 +7,7 @@ module.exports = withSass({
       return [
         {
           source: "/api/graphql",
-          destination: "http://localhost:8888/graphql"
+          destination: process.env.API_BASE_URL
         }
       ];
     }
