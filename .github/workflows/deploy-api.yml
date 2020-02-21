@@ -12,13 +12,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy to Heroku
-        uses: AkhileshNS/heroku-deploy@v3.0.0
-        with:
-          # This will be used for authentication. You can find it in your heroku homepage account settings
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          # Email that you use with heroku
-          heroku_email: christien.guy@gmail.com
-          # The appname to use for deploying/updating
-          heroku_app_name: question-answer
-
+      - run: git subtree push -f --prefix api https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/question-answer.git master
