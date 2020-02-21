@@ -12,6 +12,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: set remote
-        run: git remote add heroku https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/question-answer.git
-      - run: git subtree push --prefix api heroku master
+      - run: git subtree push --prefix api https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/question-answer.git origin/master:master
