@@ -1,8 +1,9 @@
 export type User = {
+  id: number;
   email: string;
   username: string;
-  questions: Question[];
-  answers: Answer[];
+  questions?: Question[];
+  answers?: Answer[];
 };
 
 export type Answer = {

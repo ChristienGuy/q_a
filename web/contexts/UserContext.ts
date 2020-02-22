@@ -3,7 +3,7 @@ import { User } from "../types/api";
 
 const UserContext = createContext<{
   user: User | null;
-  setUser: Dispatch<any>;
+  setUser: Dispatch<User>;
 }>({
   user: null,
   setUser: null
