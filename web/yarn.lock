@@ -955,6 +955,21 @@
   resolved "https://registry.yarnpkg.com/@next/polyfill-nomodule/-/polyfill-nomodule-9.2.2-canary.15.tgz#11bb444c9052c9f86ea6383bdec4ae8642b2254f"
   integrity sha512-rcwGjWpTd7ECMxq13ev9wNuyQXCZBbWQP4+lZBKCHyoJh0oEWKCUlXCyODWYsrOf6FB0Bur6CnSRBAe7FWKOBQ==
 
+"@reach/auto-id@^0.8.5":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.8.5.tgz#940500d4c93624852efa5ecbed29c5d7015eb6e9"
+  integrity sha512-FmyoQ5Mvw+WXLd3JOlDmHDQKqhTiZ+BwtEq9HW6pgzYMztq1wr5itv4lrSDqOYa/hJfNrkBC8iCtaIKcykuYnQ==
+  dependencies:
+    tslib "^1.10.0"
+
+"@reach/descendants@^0.8.5":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.8.5.tgz#084b2410bd13be4a76ac663d5957a54325301df0"
+  integrity sha512-L1zGSeOtpK8m/SA/CyJsKBnk+z+kvraEJUq1u/apkw1n47j1Byu40nA7TwKvUxuZtEVaK1CdsGFRGeyHRfU/kg==
+  dependencies:
+    "@reach/utils" "^0.8.5"
+    tslib "^1.10.0"
+
 "@reach/dialog@^0.8.5":
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.8.5.tgz#e6768897656b3322159ff0e3cb839124f4a9c6c2"
@@ -973,6 +988,18 @@
   integrity sha512-YRQgItjxw6DznndN4T3YS6Ikuq+FPZg8fekXeM1feuQSnMlAtEAyYVaMhpAKSD65+Yc9Zu0Utfxp5ji+wO+FLg==
   dependencies:
     tslib "^1.10.0"
+
+"@reach/tabs@^0.8.5":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.8.5.tgz#34edb417e1b499bb1049d146b61e4dc826e3b3cf"
+  integrity sha512-bkUWmsXWNy/TFj5vuoQyLrDwxZ/I+2ou5OxRbSVayluWbgcG3gGBT4sO7P3g58FQD9TVL3GE5JET7+lWYFGUeg==
+  dependencies:
+    "@reach/auto-id" "^0.8.5"
+    "@reach/descendants" "^0.8.5"
+    "@reach/utils" "^0.8.5"
+    prop-types "^15.7.2"
+    tslib "^1.10.0"
+    warning "^4.0.3"
 
 "@reach/utils@^0.8.5":
   version "0.8.5"
