@@ -4,7 +4,7 @@ import Head from "next/head";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { HttpLink } from "apollo-link-http";
+import { createHttpLink } from "apollo-link-http";
 import fetch from "isomorphic-unfetch";
 
 let globalApolloClient = null;
@@ -154,10 +154,10 @@ const createApolloClient = (initialState = {}) => {
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
-    link: new HttpLink({
+    link: createHttpLink({
       // TODO: work out how to set this per environment
+      uri: process.env.WEB_URL, // Server URL (must be absolute)
       // uri: "http://localhost:3000/api/graphql", // Server URL (must be absolute)
-      uri: "https://q-a.now.sh/api/graphql", // Server URL (must be absolute)
       credentials: "include", // Additional fetch() options like `credentials` or `headers`
       fetch
     }),

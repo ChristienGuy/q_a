@@ -1,7 +1,8 @@
 {
   "build": {
     "env": {
-      "API_BASE_URL": "@api_base_url"
+      "API_URL": "@api_url",
+      "WEB_URL": "@web_url"
     }
   }
 }
