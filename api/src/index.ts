@@ -18,6 +18,7 @@ const whitelist = [
   "https://question-answer.herokuapp.com",
   "http://localhost:8888",
   "http://localhost:5000",
+  "http://localhost:3000",
   "https://q-a.now.sh"
 ];
 

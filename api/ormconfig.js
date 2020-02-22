@@ -1,5 +1,3 @@
-const { DATABASE_URL } = process.env;
-
 // TODO: setup url to use DATABASE_URL env var so it works with heroku
 // TODO: rest of the heroku config
 const base = {
@@ -21,7 +19,7 @@ const config = {
   test: {},
   dev: {},
   production: {
-    url: DATABASE_URL,
+    url: process.env.DATABASE_URL,
     entities: ["entity/**/*.js"],
     migrations: ["migration/**/*.js"],
     subscribers: ["subscriber/**/*.js"]
