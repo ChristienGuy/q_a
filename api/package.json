@@ -42,7 +42,7 @@
     "sqlite3": "^4.1.1",
     "supertest": "^4.0.2",
     "type-graphql": "^0.17.6",
-    "typeorm": "0.2.22"
+    "typeorm": "0.2.25"
   },
   "scripts": {
     "test": "jest --watch",
